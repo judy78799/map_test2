@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/> -->
+    <link rel="stylesheet" href="leaflet.css">
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+ integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="crossorigin="">
+</script>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body{
+        overflow: hidden;
+    }
+    input {
+        position:absolute;
+        width:500px;
+        height:50px;
+        padding:15px;
+        border-radius: 15px;
+        top:3%;
+        left:5%;
+        font-size: 16px;
+        font-weight: bold;
+        color:rgb(248, 75, 75);
+        background-color: rgb(233, 233, 233);
+        z-index:9999;
+    }
+    input::placeholder{
+        color:rgb(179, 179, 179);
+    }
+    #btn-search{
+        position:absolute;
+        width:100px;
+        height:50px;
+        border-radius: 15px;
+        border: none;
+        top:3%;
+        left: 36%;
+        background-color: black;
+        font-size: 16px;
+        font-weight: bold;
+        color:rgb(255, 255, 255);
+        z-index:9999;
+    }
+    #btn-search:hover {
+        background-color: rgb(203, 255, 70);
+        color:black;
+        transition: all 1.5s ease;
+    }
+    .pin-basic {
+        display: flex;
+        align-items: center;
+        position:absolute;
+        top:3.5%;
+        width:160px;
+        height:20px;
+        padding:20px;
+        font-size: 16px;
+        font-weight: bold;
+        color:rgb(82, 82, 82);
+        border: 2.5px solid rgb(207, 207, 207);
+        border-radius: 200px;
+        background:rgb(255, 255, 255);
+        overflow: hidden;
+        z-index:9999;
+    }
+    /* 11씩 띄워줌 */
+    .pin1 {
+        left:50%;
+    }
+    .pin2 {
+        left:61%;
+    }
+    .pin3 {
+        left:72%;
+    }
+    .pin4 {
+        left:83%;
+    }
+    .pin5 {
+        left:94%;
+    }
+    .btn-now-search{
+        position: absolute;
+        top:85%;
+        left:45%;
+        width:160px;
+        height:50px;
+        border-radius: 200px;
+        background-color: black;
+        font-size: 16px;
+        font-weight: bold;
+        color:white;
+        z-index: 9999;
+    }
+    .btn-now-search:hover{
+        background-color: rgb(203, 255, 70);
+        border: none;
+        color:black;
+        transition: all 1.5s ease;
+    }
+    body{width: 100%; height:3000px;}
+    #map { width:100%; height: 800px;}
+    .box{ width: 850px; height: 850px; }
+    .tag1{z-index:100; width: 100px;  background-color: rgb(228, 228, 228); position: absolute; top: 30px; left:450px; border-radius: 50px; padding:10px; border: 4px solid rgb(163, 163, 163);}
+</style>
+<body>
+    <!-- <div class="box"> -->
+        <!-- <button class="tag1">호텔</button>
+    <div id="map"></div> -->
+    <!-- </div> -->
+    <!-- <div id="map-container"> -->
+        <div id="map"></div>
+        <button id="zoom-in">확대</button>
+        <button id="zoom-out">축소</button>
+
+        <label for=""><input type="text" placeholder="동네 알바, 과외/클래스, 중고/렌탈 검색."></label>
+        <button id="btn-search">길찾기</button>
+
+        <button class="pin-basic pin1">▶ 관심 키워드</button>
+        <button class="pin-basic pin2">▶ 알바</button>
+        <button class="pin-basic pin3">▶ 운동</button>
+        <button class="pin-basic pin4">▶ 한인마트</button>
+        <button class="pin-basic pin5">▶ 한인마트</button>
+
+        <button class="btn-now-search">현재 위치 탐색</button>
+        
+    <!-- </div> -->
+
+    <script>
+
+    var map = L.map('map').setView([51.505, -0.09], 13);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    //마커 변수 선언 .addTo(map)
+    var marker = L.marker([51.5, -0.09]).addTo(map);
+
+    var circle = L.circle([51.508, -0.11], {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 500
+    }).addTo(map);
+
+    var polygon = L.polygon([
+    [51.509, -0.08],
+    [51.503, -0.06],
+    [51.51, -0.047]
+]).addTo(map);
+
+//팝업 만들기
+marker.bindPopup("<b>안녕!</b><br>나는 팝업이야").openPopup();
+circle.bindPopup("나는 원이야");
+polygon.bindPopup("나는 다각형");
+
+//아무것도 클릭하지 않았을 때 나오는 팝업
+// var popup = L.popup()
+//     .setLatLng([51.513, -0.09])
+//     .setContent("I am a standalone popup.")
+//     .openOn(map);
+
+
+var popup = L.popup();
+
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent("당신은 이곳을 클릭하고 있어요.<br> " + e.latlng.toString())
+        .openOn(map);
+}
+//클릭하면 onMapClick 함수가 실행됩니다.
+map.on('click', onMapClick);
+
+//원하는 지역위치에 마커를 사용.
+var marker = L.marker([37.567258, 486.978123],
+  {alt: 'Kyiv'}).addTo(map) // "Kyiv" is the accessible name of this marker
+.bindPopup('서울, 대한민국');
+
+    </script>
+</body>
+</html>
